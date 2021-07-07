@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.InventoryManage2Mapper">
+    
+    <resultMap type="InventoryManage2" id="InventoryManage2Result">
+        <result property="id"    column="id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="goodsInventory"    column="goods_Inventory"    />
+    </resultMap>
+
+    <sql id="selectInventoryManage2Vo">
+        select id, goods_id, goods_name, supplier_id, goods_Inventory from inventory_manage2
+    </sql>
+
+    <select id="selectInventoryManage2List" parameterType="InventoryManage2" resultMap="InventoryManage2Result">
+        <include refid="selectInventoryManage2Vo"/>
+        <where>  
+            <if test="goodsId != null  and goodsId != ''"> and goods_id = #{goodsId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="supplierId != null  and supplierId != ''"> and supplier_id = #{supplierId}</if>
+            <if test="goodsInventory != null "> and goods_Inventory = #{goodsInventory}</if>
+        </where>
+    </select>
+    
+    <select id="selectInventoryManage2ById" parameterType="Long" resultMap="InventoryManage2Result">
+        <include refid="selectInventoryManage2Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertInventoryManage2" parameterType="InventoryManage2" useGeneratedKeys="true" keyProperty="id">
+        insert into inventory_manage2
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">goods_id,</if>
+            <if test="goodsName != null">goods_name,</if>
+            <if test="supplierId != null">supplier_id,</if>
+            <if test="goodsInventory != null">goods_Inventory,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="supplierId != null">#{supplierId},</if>
+            <if test="goodsInventory != null">#{goodsInventory},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInventoryManage2" parameterType="InventoryManage2">
+        update inventory_manage2
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="goodsInventory != null">goods_Inventory = #{goodsInventory},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInventoryManage2ById" parameterType="Long">
+        delete from inventory_manage2 where id = #{id}
+    </delete>
+
+    <delete id="deleteInventoryManage2ByIds" parameterType="String">
+        delete from inventory_manage2 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

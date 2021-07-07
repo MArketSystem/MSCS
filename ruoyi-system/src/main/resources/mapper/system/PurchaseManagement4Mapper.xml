@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PurchaseManagement4Mapper">
+    
+    <resultMap type="PurchaseManagement4" id="PurchaseManagement4Result">
+        <result property="id"    column="id"    />
+        <result property="purchaseId"    column="purchase_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="purchaseTime"    column="purchase_time"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="goodsNum"    column="goods_num"    />
+        <result property="purchasePoeple"    column="purchase_poeple"    />
+    </resultMap>
+
+    <sql id="selectPurchaseManagement4Vo">
+        select id, purchase_id, goods_id, goods_name, supplier_id, purchase_time, goods_price, goods_num, purchase_poeple from purchase_management4
+    </sql>
+
+    <select id="selectPurchaseManagement4List" parameterType="PurchaseManagement4" resultMap="PurchaseManagement4Result">
+        <include refid="selectPurchaseManagement4Vo"/>
+        <where>  
+            <if test="purchaseId != null  and purchaseId != ''"> and purchase_id = #{purchaseId}</if>
+            <if test="goodsId != null  and goodsId != ''"> and goods_id = #{goodsId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="supplierId != null  and supplierId != ''"> and supplier_id = #{supplierId}</if>
+            <if test="purchaseTime != null "> and purchase_time = #{purchaseTime}</if>
+            <if test="goodsPrice != null "> and goods_price = #{goodsPrice}</if>
+            <if test="goodsNum != null "> and goods_num = #{goodsNum}</if>
+            <if test="purchasePoeple != null  and purchasePoeple != ''"> and purchase_poeple = #{purchasePoeple}</if>
+        </where>
+    </select>
+    
+    <select id="selectPurchaseManagement4ById" parameterType="Long" resultMap="PurchaseManagement4Result">
+        <include refid="selectPurchaseManagement4Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPurchaseManagement4" parameterType="PurchaseManagement4" useGeneratedKeys="true" keyProperty="id">
+        insert into purchase_management4
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purchaseId != null">purchase_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="goodsName != null">goods_name,</if>
+            <if test="supplierId != null">supplier_id,</if>
+            <if test="purchaseTime != null">purchase_time,</if>
+            <if test="goodsPrice != null">goods_price,</if>
+            <if test="goodsNum != null">goods_num,</if>
+            <if test="purchasePoeple != null">purchase_poeple,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purchaseId != null">#{purchaseId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="supplierId != null">#{supplierId},</if>
+            <if test="purchaseTime != null">#{purchaseTime},</if>
+            <if test="goodsPrice != null">#{goodsPrice},</if>
+            <if test="goodsNum != null">#{goodsNum},</if>
+            <if test="purchasePoeple != null">#{purchasePoeple},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePurchaseManagement4" parameterType="PurchaseManagement4">
+        update purchase_management4
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="purchaseId != null">purchase_id = #{purchaseId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="purchaseTime != null">purchase_time = #{purchaseTime},</if>
+            <if test="goodsPrice != null">goods_price = #{goodsPrice},</if>
+            <if test="goodsNum != null">goods_num = #{goodsNum},</if>
+            <if test="purchasePoeple != null">purchase_poeple = #{purchasePoeple},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePurchaseManagement4ById" parameterType="Long">
+        delete from purchase_management4 where id = #{id}
+    </delete>
+
+    <delete id="deletePurchaseManagement4ByIds" parameterType="String">
+        delete from purchase_management4 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
