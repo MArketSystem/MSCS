@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GoodMapper">
+    
+    <resultMap type="Good" id="GoodResult">
+        <result property="goodId"    column="good_id"    />
+        <result property="goodNo"    column="good_no"    />
+        <result property="goodName"    column="good_name"    />
+        <result property="goodNum"    column="good_num"    />
+        <result property="goodPrice"    column="good_price"    />
+        <result property="goodSell"    column="good_sell"    />
+        <result property="goodScrap"    column="good_scrap"    />
+        <result property="goodInfo"    column="good_info"    />
+    </resultMap>
+
+    <sql id="selectGoodVo">
+        select good_id, good_no, good_name, good_num, good_price, good_sell, good_scrap, good_info from good
+    </sql>
+
+    <select id="selectGoodList" parameterType="Good" resultMap="GoodResult">
+        <include refid="selectGoodVo"/>
+        <where>  
+            <if test="goodNo != null  and goodNo != ''"> and good_no = #{goodNo}</if>
+            <if test="goodName != null  and goodName != ''"> and good_name like concat('%', #{goodName}, '%')</if>
+            <if test="goodNum != null "> and good_num = #{goodNum}</if>
+            <if test="goodPrice != null "> and good_price = #{goodPrice}</if>
+            <if test="goodSell != null "> and good_sell = #{goodSell}</if>
+            <if test="goodScrap != null "> and good_scrap = #{goodScrap}</if>
+            <if test="goodInfo != null  and goodInfo != ''"> and good_info = #{goodInfo}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodById" parameterType="Long" resultMap="GoodResult">
+        <include refid="selectGoodVo"/>
+        where good_id = #{goodId}
+    </select>
+        
+    <insert id="insertGood" parameterType="Good" useGeneratedKeys="true" keyProperty="goodId">
+        insert into good
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodNo != null and goodNo != ''">good_no,</if>
+            <if test="goodName != null and goodName != ''">good_name,</if>
+            <if test="goodNum != null">good_num,</if>
+            <if test="goodPrice != null">good_price,</if>
+            <if test="goodSell != null">good_sell,</if>
+            <if test="goodScrap != null">good_scrap,</if>
+            <if test="goodInfo != null">good_info,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodNo != null and goodNo != ''">#{goodNo},</if>
+            <if test="goodName != null and goodName != ''">#{goodName},</if>
+            <if test="goodNum != null">#{goodNum},</if>
+            <if test="goodPrice != null">#{goodPrice},</if>
+            <if test="goodSell != null">#{goodSell},</if>
+            <if test="goodScrap != null">#{goodScrap},</if>
+            <if test="goodInfo != null">#{goodInfo},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGood" parameterType="Good">
+        update good
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodNo != null and goodNo != ''">good_no = #{goodNo},</if>
+            <if test="goodName != null and goodName != ''">good_name = #{goodName},</if>
+            <if test="goodNum != null">good_num = #{goodNum},</if>
+            <if test="goodPrice != null">good_price = #{goodPrice},</if>
+            <if test="goodSell != null">good_sell = #{goodSell},</if>
+            <if test="goodScrap != null">good_scrap = #{goodScrap},</if>
+            <if test="goodInfo != null">good_info = #{goodInfo},</if>
+        </trim>
+        where good_id = #{goodId}
+    </update>
+
+    <delete id="deleteGoodById" parameterType="Long">
+        delete from good where good_id = #{goodId}
+    </delete>
+
+    <delete id="deleteGoodByIds" parameterType="String">
+        delete from good where good_id in 
+        <foreach item="goodId" collection="array" open="(" separator="," close=")">
+            #{goodId}
+        </foreach>
+    </delete>
+
+</mapper>

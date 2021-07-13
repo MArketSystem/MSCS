@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PurchMapper">
+    
+    <resultMap type="Purch" id="PurchResult">
+        <result property="purchId"    column="purch_id"    />
+        <result property="purchGoodno"    column="purch_goodno"    />
+        <result property="purchCost"    column="purch_cost"    />
+        <result property="purchNum"    column="purch_num"    />
+        <result property="purchDate"    column="purch_date"    />
+    </resultMap>
+
+    <sql id="selectPurchVo">
+        select purch_id, purch_goodno, purch_cost, purch_num, purch_date from purch
+    </sql>
+
+    <select id="selectPurchList" parameterType="Purch" resultMap="PurchResult">
+        <include refid="selectPurchVo"/>
+        <where>  
+            <if test="purchGoodno != null  and purchGoodno != ''"> and purch_goodno = #{purchGoodno}</if>
+            <if test="purchCost != null "> and purch_cost = #{purchCost}</if>
+            <if test="purchNum != null "> and purch_num = #{purchNum}</if>
+            <if test="purchDate != null "> and purch_date = #{purchDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectPurchById" parameterType="Long" resultMap="PurchResult">
+        <include refid="selectPurchVo"/>
+        where purch_id = #{purchId}
+    </select>
+        
+    <insert id="insertPurch" parameterType="Purch" useGeneratedKeys="true" keyProperty="purchId">
+        insert into purch
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purchGoodno != null">purch_goodno,</if>
+            <if test="purchCost != null">purch_cost,</if>
+            <if test="purchNum != null">purch_num,</if>
+            <if test="purchDate != null">purch_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purchGoodno != null">#{purchGoodno},</if>
+            <if test="purchCost != null">#{purchCost},</if>
+            <if test="purchNum != null">#{purchNum},</if>
+            <if test="purchDate != null">#{purchDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePurch" parameterType="Purch">
+        update purch
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="purchGoodno != null">purch_goodno = #{purchGoodno},</if>
+            <if test="purchCost != null">purch_cost = #{purchCost},</if>
+            <if test="purchNum != null">purch_num = #{purchNum},</if>
+            <if test="purchDate != null">purch_date = #{purchDate},</if>
+        </trim>
+        where purch_id = #{purchId}
+    </update>
+
+    <delete id="deletePurchById" parameterType="Long">
+        delete from purch where purch_id = #{purchId}
+    </delete>
+
+    <delete id="deletePurchByIds" parameterType="String">
+        delete from purch where purch_id in 
+        <foreach item="purchId" collection="array" open="(" separator="," close=")">
+            #{purchId}
+        </foreach>
+    </delete>
+
+</mapper>

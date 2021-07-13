@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改销售管理')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sell-edit" th:object="${sell}">
+            <input name="sellId" th:field="*{sellId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">销售商品编号：</label>
+                <div class="col-sm-8">
+                    <input name="sellGoodno" th:field="*{sellGoodno}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">销售价格：</label>
+                <div class="col-sm-8">
+                    <input name="sellPrice" th:field="*{sellPrice}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">销售数量：</label>
+                <div class="col-sm-8">
+                    <input name="sellNum" th:field="*{sellNum}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">销售日期：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="sellDate" th:value="${#dates.format(sell.sellDate, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text" required>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/sell";
+        $("#form-sell-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-sell-edit').serialize());
+            }
+        }
+
+        $("input[name='sellDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

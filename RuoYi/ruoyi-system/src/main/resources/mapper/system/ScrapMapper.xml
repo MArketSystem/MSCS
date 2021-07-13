@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ScrapMapper">
+    
+    <resultMap type="Scrap" id="ScrapResult">
+        <result property="scrapId"    column="scrap_id"    />
+        <result property="scrapGoodno"    column="scrap_goodno"    />
+        <result property="scrapNum"    column="scrap_num"    />
+        <result property="scrapDate"    column="scrap_date"    />
+        <result property="scrapReason"    column="scrap_reason"    />
+    </resultMap>
+
+    <sql id="selectScrapVo">
+        select scrap_id, scrap_goodno, scrap_num, scrap_date, scrap_reason from scrap
+    </sql>
+
+    <select id="selectScrapList" parameterType="Scrap" resultMap="ScrapResult">
+        <include refid="selectScrapVo"/>
+        <where>  
+            <if test="scrapGoodno != null  and scrapGoodno != ''"> and scrap_goodno = #{scrapGoodno}</if>
+            <if test="scrapNum != null "> and scrap_num = #{scrapNum}</if>
+            <if test="scrapDate != null "> and scrap_date = #{scrapDate}</if>
+            <if test="scrapReason != null  and scrapReason != ''"> and scrap_reason = #{scrapReason}</if>
+        </where>
+    </select>
+    
+    <select id="selectScrapById" parameterType="Long" resultMap="ScrapResult">
+        <include refid="selectScrapVo"/>
+        where scrap_id = #{scrapId}
+    </select>
+        
+    <insert id="insertScrap" parameterType="Scrap" useGeneratedKeys="true" keyProperty="scrapId">
+        insert into scrap
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scrapGoodno != null">scrap_goodno,</if>
+            <if test="scrapNum != null">scrap_num,</if>
+            <if test="scrapDate != null">scrap_date,</if>
+            <if test="scrapReason != null">scrap_reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scrapGoodno != null">#{scrapGoodno},</if>
+            <if test="scrapNum != null">#{scrapNum},</if>
+            <if test="scrapDate != null">#{scrapDate},</if>
+            <if test="scrapReason != null">#{scrapReason},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScrap" parameterType="Scrap">
+        update scrap
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scrapGoodno != null">scrap_goodno = #{scrapGoodno},</if>
+            <if test="scrapNum != null">scrap_num = #{scrapNum},</if>
+            <if test="scrapDate != null">scrap_date = #{scrapDate},</if>
+            <if test="scrapReason != null">scrap_reason = #{scrapReason},</if>
+        </trim>
+        where scrap_id = #{scrapId}
+    </update>
+
+    <delete id="deleteScrapById" parameterType="Long">
+        delete from scrap where scrap_id = #{scrapId}
+    </delete>
+
+    <delete id="deleteScrapByIds" parameterType="String">
+        delete from scrap where scrap_id in 
+        <foreach item="scrapId" collection="array" open="(" separator="," close=")">
+            #{scrapId}
+        </foreach>
+    </delete>
+
+</mapper>

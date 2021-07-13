@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SellMapper">
+    
+    <resultMap type="Sell" id="SellResult">
+        <result property="sellId"    column="sell_id"    />
+        <result property="sellGoodno"    column="sell_goodno"    />
+        <result property="sellPrice"    column="sell_price"    />
+        <result property="sellNum"    column="sell_num"    />
+        <result property="sellDate"    column="sell_date"    />
+    </resultMap>
+
+    <sql id="selectSellVo">
+        select sell_id, sell_goodno, sell_price, sell_num, sell_date from sell
+    </sql>
+
+    <select id="selectSellList" parameterType="Sell" resultMap="SellResult">
+        <include refid="selectSellVo"/>
+        <where>  
+            <if test="sellGoodno != null  and sellGoodno != ''"> and sell_goodno = #{sellGoodno}</if>
+            <if test="sellPrice != null "> and sell_price = #{sellPrice}</if>
+            <if test="sellNum != null "> and sell_num = #{sellNum}</if>
+            <if test="sellDate != null "> and sell_date = #{sellDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectSellById" parameterType="Long" resultMap="SellResult">
+        <include refid="selectSellVo"/>
+        where sell_id = #{sellId}
+    </select>
+        
+    <insert id="insertSell" parameterType="Sell" useGeneratedKeys="true" keyProperty="sellId">
+        insert into sell
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sellGoodno != null">sell_goodno,</if>
+            <if test="sellPrice != null">sell_price,</if>
+            <if test="sellNum != null">sell_num,</if>
+            <if test="sellDate != null">sell_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sellGoodno != null">#{sellGoodno},</if>
+            <if test="sellPrice != null">#{sellPrice},</if>
+            <if test="sellNum != null">#{sellNum},</if>
+            <if test="sellDate != null">#{sellDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSell" parameterType="Sell">
+        update sell
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sellGoodno != null">sell_goodno = #{sellGoodno},</if>
+            <if test="sellPrice != null">sell_price = #{sellPrice},</if>
+            <if test="sellNum != null">sell_num = #{sellNum},</if>
+            <if test="sellDate != null">sell_date = #{sellDate},</if>
+        </trim>
+        where sell_id = #{sellId}
+    </update>
+
+    <delete id="deleteSellById" parameterType="Long">
+        delete from sell where sell_id = #{sellId}
+    </delete>
+
+    <delete id="deleteSellByIds" parameterType="String">
+        delete from sell where sell_id in 
+        <foreach item="sellId" collection="array" open="(" separator="," close=")">
+            #{sellId}
+        </foreach>
+    </delete>
+
+</mapper>
